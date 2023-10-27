@@ -10,10 +10,10 @@ rm(list = ls())
 dir = getwd()
 
 # Import EDS functions
-source("scripts/eds_functions.R")
-source("scripts/ExpandingExtract.R")
+source("~/workspace/scripts/eds_functions.R")
+source("~/workspace/scripts/ExpandingExtract.R")
 
-load('data/survey_marian.RData')
+load('~/workspace/data/survey_marian.RData')
 df$lon = ifelse(df$lon < 0, df$lon + 360, df$lon)
 df$unit = df$island
 df = subset(df, unit %in% c("Guam", "Hawaii"))

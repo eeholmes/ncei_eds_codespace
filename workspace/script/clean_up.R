@@ -1,6 +1,6 @@
 library(dplyr)
 
-load("outputs/Survey_Master_Timeseries_2021-02-27.Rdata"); df = SM; rm(SM)
+load("~/workspace/outputs/Survey_Master_Timeseries_2021-02-27.Rdata"); df = SM; rm(SM)
 
 glimpse(df)
 

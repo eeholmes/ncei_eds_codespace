@@ -10,7 +10,7 @@ rm(list = ls())
 
 dir = paste0(getwd(), "/")
 
-source("scripts/eds_functions.R")
+source("~/workspace/scripts/eds_functions.R")
 
 ###########################################################################
 ### read survey data points, assign distinct lat, lon, and time columns ###

@@ -12,7 +12,7 @@ library(dplyr)
 library(readr)
 library(ggplot2)
 
-load('data/SURVEY MASTER.RData'); df = SURVEY_MASTER
+load('~/workspace/data/SURVEY MASTER.RData'); df = SURVEY_MASTER
 
 df$lon = df$LONGITUDE_LOV
 df$lat = df$LATITUDE_LOV
