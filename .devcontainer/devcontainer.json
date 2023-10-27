@@ -2,7 +2,6 @@
   "name": "RStudio Codespace",
   "dockerComposeFile": "../../docker-compose.yml",
   "service": "rstudio",
-  "workspaceFolder": "/workspaces/ncei_eds",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
