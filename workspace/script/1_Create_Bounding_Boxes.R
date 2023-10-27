@@ -14,7 +14,7 @@ library(dplyr)
 library(readr)
 library(ggplot2)
 library(ggdark)
-library(rgeos)
+#library(rgeos)
 library(sf)
 library(maps)
 
@@ -24,7 +24,7 @@ if ("package:plyr" %in% search()) {
 }
 
 # Load the data
-load('data/survey_mhi.RData')
+load('~/workspace/data/survey_mhi.RData')
 
 df <- df %>% filter(!is.na(lon) & !is.na(lat))
 
@@ -74,4 +74,4 @@ df_frame <- df %>%
 df <- left_join(boxes, df_frame, by = "unit") %>%
   mutate(unit = gsub(" ", "_", unit))
 
-write_csv(df, 'data/Bounding_Boxes.csv')
+write_csv(df, '~/workspace/data/Bounding_Boxes.csv')
