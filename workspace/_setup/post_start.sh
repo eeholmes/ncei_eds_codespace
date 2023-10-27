@@ -25,7 +25,7 @@ docker logs rstudio
 echo "$message"
 
 # Append the message to README.md
-echo "$message" >> /workspaces/ncei_eds/README.md
+echo "$message" >> /home/rstudio/workspace/README.md
 
 sleep 10
 
