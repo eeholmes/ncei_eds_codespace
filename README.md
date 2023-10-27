@@ -1,5 +1,5 @@
 # NCEI EDS Codespace
-
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MichaelAkridge-NOAA/ncei_eds_codespace?quickstart=1)
 ----------
 ## GUID: gov.noaa.nmfs.inport:65209
 
