@@ -11,6 +11,13 @@ message="# Welcome to your RStudio Codespace!
 Your application is available at this URL:
 
 ## RStudio URL: https://$CODESPACE_NAME-8787.app.github.dev
+
+
+<object data="/home/rstudio/workspace/slides/CW_Verstaen_EDS.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="/home/rstudio/workspace/slides/CW_Verstaen_EDS.pdf">
+    </embed>
+</object>
+
 "
 # Echo the message to the terminal
 echo "$message"
