@@ -1,104 +1,119 @@
 #################################################################
 ### Scripts to attach climatologies variables to in situ data ###
-### Originally developed & conceptualized by T.A.Oliver       ###
-### Revised & Edited & Maintained by K.R.Tanaka               ###
+### Revised & Maintained by K.R.Tanaka & T.A.Oliver.          ###
+### POC: kisei.tanaka@noaa.gov, thomas.oliver@noaa.gov,       ###
+### jessica.perelman@noaa.gov, juliette.verstaen@noaa.gov     ###
 #################################################################
 
 rm(list = ls())
 
-library(spatial)
-library(raster)
-library(lubridate)
-library(raster)
-library(visdat)
-
 dir = getwd()
 
-# import Tom's functions
-source("scripts/HelperCode/ExpandingExtract.R")
+# Import EDS functions
+source("scripts/eds_functions.R")
+source("scripts/ExpandingExtract.R")
 
-# import survey data, SM = master REA survey file, subset if necessary 
-load('data/SURVEY MASTER.RData'); SM = SURVEY_MASTER
-table(SM$REGION)
-# SM = subset(SM, REGION == "MARIAN")
+load('data/survey_marian.RData')
+df$lon = ifelse(df$lon < 0, df$lon + 360, df$lon)
+df$unit = df$island
+df = subset(df, unit %in% c("Guam", "Hawaii"))
 
-SM$LONGITUDE_LOV = ifelse(SM$LONGITUDE_LOV < 0, SM$LONGITUDE_LOV + 360, SM$LONGITUDE_LOV)
+df$lon = ifelse(df$lon < 0, df$lon + 360, df$lon)
 
-# remove NAs in lat & lon columns, then turn it into spatial object
-SM = SM[complete.cases(SM[,c("LONGITUDE_LOV", "LATITUDE_LOV")]), ]
-SM_sp = SM; SM_sp = as.data.frame(SM_sp)
-coordinates(SM_sp) = ~LONGITUDE_LOV + LATITUDE_LOV
+# Remove NAs in lat & lon columns. Convert into a spatial object
+df = df[complete.cases(df[,c("lon", "lat")]), ]
+df_sp = df; df_sp = as.data.frame(df_sp)
+coordinates(df_sp) = ~lon + lat
 
 # get list of rasters (i.e., climatologies)
-rasterlist = list.files(c("~/Desktop/EDS/DataDownload/Chlorophyll_A_Monthly_MODIS_2017//Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/Chlorophyll_A_Monthly_MODIS_2018//Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/Chlorophyll_A_Monthly_MODIS_2019//Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/PAR_Monthly_2017/Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/PAR_Monthly_2018/Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/PAR_Monthly_2019/Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/SST_Monthly_2017/Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/SST_Monthly_2018/Domain_Level_Data/mean/",
-                          "~/Desktop/EDS/DataDownload/SST_Monthly_2019/Domain_Level_Data/mean/"),
-                        recursive = T, 
-                        pattern = "_AllIslands.nc", 
+EDS_path = paste0("/Users/", Sys.info()[7], "/Desktop/EDS/Static_Variables/")
+
+# Create list of climatology raster files
+rasterlist = list.files(EDS_path,
+                        recursive = T,
+                        pattern = "_all_units.nc",
                         full.names = T)
 
-# see all rasterarized climatological variables
+# Check rasterarized climatological variables
 strsplit(rasterlist, "/")
 
 ###################
 ### normal loop ###
 ###################
+
 start = Sys.time()
-for(raster_i in 1:length(rasterlist)){
-  
+
+for (raster_i in 1:length(rasterlist)){
+
   # raster_i = 1
-  
-  rasname_full = rasterlist[raster_i] 
+
+  rasname_full = rasterlist[raster_i]
   rasname_sp = strsplit(rasname_full, "/")[[1]]
   rasname = rasname_sp[length(rasname_sp)]
   rasname = gsub(rasname, pattern = "-", replacement = ".")
-  rasname = gsub(rasname, pattern = "_AllIslands.nc", replacement = "")
-  
+  rasname = gsub(rasname, pattern = "_all_units.nc", replacement = "")
+
   this_r = raster(rasterlist[raster_i])
-  
+
+  if (grepl("Bathymetry", rasname)) {
+    this_r[this_r > 0] <- NA
+  }
+
   if (this_r@extent@xmin < 0) this_r = shift(rotate(shift(this_r, 180)), 180)
-  
-  crs(SM_sp) = crs(this_r) 
-  
+
+  crs(df_sp) = crs(this_r)
+
   print(paste0("Step ", raster_i, " of ", length(rasterlist), ": ", rasname))
-  
-  this_Ex = ExpandingExtract(this_r, SM_sp, Dists = seq(0, 50, 10))
-  
-  eval(parse(text = paste0("SM_sp$", rasname, " = this_Ex$values")))
-  
+
+  this_Ex = ExpandingExtract(this_r, df_sp, Dists = seq(0, 100, 10))
+
+  eval(parse(text = paste0("df_sp$", rasname, " = this_Ex$values")))
+
   print(paste0("Step ", raster_i, " of ", length(rasterlist), ": Extraction Complete."))
-  print(paste0("Step ", raster_i, " of ", length(rasterlist), ": Write Out Complete."))
-  
+
 }
+
 stop = Sys.time()
 start - stop
 beepr::beep(2)
 
-df = as.data.frame(SM_sp)
-df = df[,c(2:4, 16:17, 48:length(names(df)))]
+df = as.data.frame(df_sp)
 
-vis_miss(df)
+save(df, file = paste0("outputs/EDS_Climatologies_", Sys.Date(), ".RData"))
+write_csv(df, paste0("outputs/EDS_Climatologies_", Sys.Date(), ".csv"))
 
-write_csv(df,  paste0("outputs/NCRMP_Climatologies_", Sys.Date(), ".csv"))
+if ("package:raster" %in% search()) unloadNamespace("raster")
 
-save(df, file = paste0("outputs/NCRMP_Climatologies_", Sys.Date(), ".RData"))
+good_sites = df %>% group_by(site) %>% dplyr::summarise(n = n()) %>% subset(n > 2)
+good_sites = unique(good_sites$site)
 
-library(dplyr)
-library(ggplot2)
+clim1 = df %>%
+  subset(site %in% good_sites) %>%
+  select(site, Chlorophyll_A_ESA_OC_CCI_v6.0_Clim) %>%
+  `colnames<-` (c("Site", "chl_a_1998_2022")) %>%
+  ggplot(aes(x = chl_a_1998_2022, y = Site, fill = chl_a_1998_2022, color = chl_a_1998_2022)) +
+  geom_joy(scale = 2, alpha = 0.8, size = 0.1, bandwidth = 0.05) +
+  ylab(NULL) +
+  xlab("Chlorophyll_A_Climatology_1998_2022") +
+  ggdark::dark_theme_minimal() +
+  scale_fill_viridis_c("", trans = "sqrt") +
+  scale_color_viridis_c("", trans = "sqrt") +
+  theme(legend.position = "right")
 
-df %>%
-  subset(REGION == "MHI") %>%
-  subset(ISLAND == "Molokai") %>%
-  group_by(LONGITUDE_LOV, LATITUDE_LOV, ISLAND) %>% 
-  summarise(ev = mean(Chlorophyll_A_Monthly_MODIS_2017_mean_2002.07.16_2017.12.16, na.rm = T)) %>%
-  ggplot(aes(LONGITUDE_LOV, LATITUDE_LOV, fill = ev, color = ev)) +
-  geom_point(shape = 21, size = 3, alpha = 0.8) +
-  scale_fill_viridis_c(trans = "log") + 
-  scale_color_viridis_c(trans = "log")
+clim2 = df %>%
+  subset(site %in% good_sites) %>%
+  select(site, Sea_Surface_Temperature_CRW_1985.2022_Clim) %>%
+  `colnames<-` (c("Site", "sst_1985_2022")) %>%
+  ggplot(aes(x = sst_1985_2022, y = Site, fill = sst_1985_2022, color = sst_1985_2022)) +
+  geom_joy(scale = 2, alpha = 0.8, size = 0, bandwidth = 0.05) +
+  ylab(NULL) +
+  xlab("SST_Climatology_1985_2022") +
+  ggdark::dark_theme_minimal() +
+  scale_fill_gradientn(colors =  colorRamps::matlab.like(100), "", trans = "sqrt") +
+  scale_color_gradientn(colors =  colorRamps::matlab.like(100), "", trans = "sqrt") +
+  theme(legend.position = "right")
 
+library(patchwork)
+clim1 + clim2
+
+ggsave(last_plot(), filename = "outputs/EDS_Climatology.png", height = 8, width = 14)
