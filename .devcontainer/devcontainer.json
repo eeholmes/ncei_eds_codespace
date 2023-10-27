@@ -13,12 +13,7 @@
       "onAutoForward": "openPreview"
     }
   },
-"postStartCommand": "chmod +x /home/rstudio/workspace/_setup/post_start.sh && /home/rstudio/workspace/_setup/post_start.sh",
-    "customizations": {
-        "codespaces": {
-            "openFiles": ["README.md", "/home/rstudio/workspace/CW_Verstaen_EDS.pdf", "/home/rstudio/workspace/ESD_workshop_02.pdf"]
-        }
-    },
+"postStartCommand": "chmod +x /home/rstudio/workspace/_setup/post_start.sh && /home/rstudio/workspace/_setup/post_start.sh"},
   "extensions": []
 }
 
