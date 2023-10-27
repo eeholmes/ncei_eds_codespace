@@ -1,7 +1,7 @@
 services:
   rstudio:
     container_name: rstudio
-    image: rocker/geospatial
+    build: .
     ports:
       - "8787:8787"
     volumes:
