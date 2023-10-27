@@ -1,6 +1,6 @@
 {
   "name": "RStudio Codespace",
-  "dockerComposeFile": "../../docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "rstudio",
   "workspaceFolder": "/home/rstudio/workspace",
   "settings": {
