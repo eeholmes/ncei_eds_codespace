@@ -16,6 +16,6 @@ echo "$message"
 # Append the message to README.md
 echo "$message" >> /home/rstudio/workspace/README.md
 
-sudo apt update
-sudo apt install libgeos-dev
+#sudo apt update
+#sudo apt install libgeos-dev
 
