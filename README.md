@@ -1,5 +1,8 @@
 # NCEI EDS Codespace
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MichaelAkridge-NOAA/ncei_eds_codespace?quickstart=1)
+
+The EDS allows users to download/filter/extract/summarize large amounts of gridded and tabular data given user-defined time stamps and geographical coordinates.
+
 ----------
 ## GUID: gov.noaa.nmfs.inport:65209
 
