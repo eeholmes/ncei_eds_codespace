@@ -1,18 +1,18 @@
 #!/bin/bash
 
-# Construct the message
+# Update readme
 message="# Welcome to your ESD RStudio Codespace!
 - This readme should open up at same time as the VS code container. 
 - If there are any persistent data changes, you might want to backup/export the data 
 - Various project files and scripts will need thier paths updated. 
-- Review slides for more info on how to use
+- Review slides for more info
 
 # Access RStudio
-- ## RStudio URL: https://$CODESPACE_NAME-8787.app.github.dev
+## [Click to Open RStudio](https://$CODESPACE_NAME-8787.app.github.dev)
 
-## Slides:
-- ## https://$CODESPACE_NAME-8787.app.github.dev/files/workspace/slides/CW_Verstaen_EDS.pdf
-- ## https://$CODESPACE_NAME-8787.app.github.dev/files/workspace/slides/ESD_workshop_02.pdf
+## View Slides:
+## [CW_Verstaen_EDS_Overview](https://$CODESPACE_NAME-8787.app.github.dev/files/workspace/slides/CW_Verstaen_EDS.pdf)
+## [ESD_workshop](https://$CODESPACE_NAME-8787.app.github.dev/files/workspace/slides/ESD_workshop_02.pdf)
 
 "
 # Echo the message to the terminal
