@@ -12,7 +12,7 @@ rm(list = ls())
 # remotes::install_version("rerddap", version = "1.0.1")
 
 # Library Calls and Function Definition
-source("~/workspace/scripts/eds_functions.R")
+source("~/workspace/script/eds_functions.R")
 
 # Setup ERRDAP Cache
 cache_setup(temp_dir = T)
