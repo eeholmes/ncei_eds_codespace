@@ -1,7 +1,6 @@
 # Environmental Data Summary (EDS) Codespace
 [![Open RStudio in GitHub Codespaces](./docs/badge_codespaces_rstudio.png)](https://codespaces.new/MichaelAkridge-NOAA/ncei_eds_codespace?quickstart=1)
-
-The EDS allows users to download/filter/extract/summarize large amounts of gridded and tabular data given user-defined time stamps and geographical coordinates. The various external environmental data summarized at individual survey sites can aid scientists to assess and understand how living marine resources are impacted by the environmental variabilities.
+RStudio Github Codespace with EDS project files. The EDS allows users to download/filter/extract/summarize large amounts of gridded and tabular data given user-defined time stamps and geographical coordinates. The various external environmental data summarized at individual survey sites can aid scientists to assess and understand how living marine resources are impacted by the environmental variabilities.
 ![](./docs/02.png)
 ![](./docs/01.png)
 ## Metadata
