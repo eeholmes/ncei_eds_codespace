@@ -5,7 +5,7 @@ services:
     ports:
       - "8787:8787"
     volumes:
-      - ./workspace:/home/rstudio/workspace
+      - .:/home/rstudio
     environment:
       - DISABLE_AUTH=true
 
